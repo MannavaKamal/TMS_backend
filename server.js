@@ -10,6 +10,7 @@ app1.use(express.json({ limit: "50mb" }));
 app1.use(express.urlencoded({ limit: "50mb", extended: true }));
 app1.use(parser.json());
 app1.use(express.json());
+app1.use(cors())
 
 
 // database
