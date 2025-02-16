@@ -13,7 +13,7 @@ app1.use(express.json());
 
 
 // database
-mongoose.connect('mongodb://localhost:27017/TMS',{
+mongoose.connect('mongodb+srv://2200032973:jJ4ixc5JEMXC8Dhi@cluster0.s8i0c8m.mongodb.net/TMS',{
   useNewUrlParser: true,
   useUnifiedTopology: true
 }).then(() => console.log('MongoDB connected successfully'))
@@ -31,19 +31,16 @@ app1.use(session({
   saveUninitialized:true,
   secret:"for my project",
 }))
-app1.use(cors({
-   origin : ["http://localhost:3000"],
-  methods : ["POST","GET"],
-   credentials : true
-}
-));
+
 app1.post('/userSignup',async(req,res)=>{   // usersignup 
    User.insertMany(req.body)
    return res.json({"code":1})
 
  })
 
+ 
  app1.post('/userLogin',async(req,res)=>{  // userLogin
+
   const ret = await User.findOne({email:req.body.email}) 
 if(ret !== null && ret.password === req.body.password){  
   return res.json({"code":1,
@@ -58,7 +55,6 @@ else{
 app1.post("/tasks",async(req,res)=>{ // add task to an user
   const {id,task} = req.body
   let user =  await User.findById(id)
-  task.created_at = new Date();
   user.Tasks.push(task)
   await user.save();
   return res.json({"code":1})
@@ -83,7 +79,6 @@ app1.get("/tasks",async(req,res)=>{   // to retrive all tasks of an user
  app1.put("/tasks/:id/:index", async (req, res) => {  // update task of an user based on index
   const { id, index } = req.params;
   const updatedTask = req.body;
-  updatedTask.task.updated_at = new Date();
   const user = await User.findById(id);
   user.Tasks[index] = { ...user.Tasks[index], ...updatedTask.task };
    user.markModified("Tasks"); // Mark 'Tasks' array as modified
