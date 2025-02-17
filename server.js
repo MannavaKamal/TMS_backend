@@ -90,8 +90,9 @@ app1.get("/tasks",async(req,res)=>{   // to retrive all tasks of an user
 app1.patch("/tasks/:id/:index/complete", async (req, res) => { // to mark task has to be completed
   
     const { id, index } = req.params
+    console.log(id,index)
     const user = await User.findById(id)
-    user.Tasks[index].status = "completed";
+    user.Tasks[index].completed = !user.Tasks[index].completed
     user.markModified("Tasks");    // Mark 'Tasks' as modified so Mongoose knows it has changed
     await user.save()
     return res.json({"code":1})
